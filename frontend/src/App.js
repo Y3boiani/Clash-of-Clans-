@@ -389,6 +389,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/unified-dashboard" element={<UnifiedDashboard />} />
         <Route path="/module/:id" element={<ModuleDetailWrapper />} />
       </Routes>
     </BrowserRouter>
@@ -396,7 +397,7 @@ function App() {
 }
 
 const ModuleDetailWrapper = () => {
-  const { id } = require('react-router-dom').useParams();
+  const { id } = useParams();
   return <ModuleDetail moduleNum={parseInt(id)} />;
 };
 
