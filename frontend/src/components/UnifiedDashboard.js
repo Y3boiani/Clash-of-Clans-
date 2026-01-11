@@ -365,14 +365,7 @@ const OverviewTab = ({ analyses }) => (
   </div>
 );
 
-const ModuleStatusCard = ({ title, status, description }) => (
-  <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10">
-    <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-    <div className="text-yellow-400 font-semibold mb-2">{status}</div>
-    <div className="text-blue-200 text-sm">{description}</div>
-  </div>
-);
-
+// ModuleStatusCard removed - using inline visualizations instead
 // Other tabs implementations...
 const LeadershipTab = ({ data }) => {
   if (!data || data.error) {
