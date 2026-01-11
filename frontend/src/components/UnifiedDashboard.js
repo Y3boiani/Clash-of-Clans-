@@ -468,23 +468,78 @@ const DonationsTab = ({ data }) => {
 
   return (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
-          <h3 className="text-xl font-bold text-white mb-4">Network Health</h3>
-          <div className="text-6xl font-bold text-green-400 mb-2">
-            {data.overall_health_score?.grade}
+      {/* Donation Flow Visualization */}
+      <div className="coc-card p-6 border-4">
+        <h2 className="text-2xl font-bold text-coc-gold mb-6 flex items-center gap-3">
+          <span className="coc-icon text-xl">💎</span>
+          Resource Flow Analysis
+        </h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div>
+            <DonationFlowViz 
+              contributors={data.top_contributors || []}
+              parasites={data.parasites_detected || 0}
+              healthGrade={data.overall_health_score?.grade || 'B'}
+            />
           </div>
-          <div className="text-blue-200">{data.overall_health_score?.interpretation}</div>
+          <div className="space-y-4">
+            <div className="bg-black/30 p-4 rounded-lg border border-amber-900/50">
+              <h4 className="text-coc-gold font-bold mb-2">📈 Network Health Explained</h4>
+              <p className="text-yellow-200 text-sm">
+                We analyze donation patterns using graph theory. Healthy clans have 
+                balanced give-and-take relationships. Parasites take more than they give.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-black/30 p-3 rounded-lg text-center">
+                <div className="text-5xl font-bold text-green-400">{data.overall_health_score?.grade}</div>
+                <div className="text-xs text-yellow-200 uppercase">Health Grade</div>
+              </div>
+              <div className="bg-black/30 p-3 rounded-lg text-center">
+                <div className="text-3xl font-bold text-red-400">{data.parasites_detected || 0}</div>
+                <div className="text-xs text-yellow-200 uppercase">Parasites Found</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
-          <h3 className="text-xl font-bold text-white mb-4">Top Contributors</h3>
-          <div className="space-y-2">
+      </div>
+
+      {/* Top Contributors */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="coc-card p-6 border-4">
+          <h3 className="text-xl font-bold text-coc-gold mb-4">🌟 Top Contributors</h3>
+          <div className="space-y-3">
             {data.top_contributors?.slice(0, 5).map((contributor, i) => (
-              <div key={i} className="flex justify-between items-center">
-                <span className="text-white">{contributor.player_name || `Player ${i + 1}`}</span>
-                <span className="text-blue-400">{contributor.donations_given || 0}</span>
+              <div key={i} className="flex justify-between items-center bg-black/20 p-3 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <span className="coc-badge w-8 h-8 text-sm">{i + 1}</span>
+                  <span className="text-yellow-100 font-bold">{contributor.player_name || `Player ${i + 1}`}</span>
+                </div>
+                <span className="text-coc-gold font-bold">{contributor.donations_given || 0} 💎</span>
               </div>
             ))}
+          </div>
+        </div>
+        
+        <div className="coc-card p-6 border-4">
+          <h3 className="text-xl font-bold text-coc-gold mb-4">📊 Network Metrics</h3>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-yellow-200">Reciprocity</span>
+              <span className="text-white capitalize font-bold">{data.reciprocity?.interpretation || 'N/A'}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-yellow-200">Network Density</span>
+              <span className="text-purple-400 font-bold">{((data.network_metrics?.density || 0) * 100).toFixed(1)}%</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-yellow-200">Gini Coefficient</span>
+              <span className="text-orange-400 font-bold">{(data.inequality?.gini || 0).toFixed(3)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-yellow-200">Total Flow</span>
+              <span className="text-coc-gold font-bold">{data.network_metrics?.total_donations || 0}</span>
+            </div>
           </div>
         </div>
       </div>
