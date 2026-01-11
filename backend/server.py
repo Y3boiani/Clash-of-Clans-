@@ -211,7 +211,11 @@ async def get_clan_data_stats(clan_tag: str):
     
     Shows how much historical data is available for ML models.
     """
-    clan_tag = clan_tag.replace('#', '%23')
+    # URL decode the clan tag (FastAPI already decodes %23 to #)
+    from urllib.parse import unquote
+    clan_tag = unquote(clan_tag)
+    if not clan_tag.startswith('#'):
+        clan_tag = '#' + clan_tag
     
     # Count snapshots
     player_snapshots = await db.players_history.count_documents({"clan_tag": clan_tag})
