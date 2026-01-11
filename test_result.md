@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the CoC ML Research Platform backend API endpoints after frontend migration"
+user_problem_statement: "Test the CoC ML Research Platform backend with REAL data for clan #9PC99CP8 (Amber Amry)"
 
 backend:
   - task: "Root API endpoint health check"
@@ -140,6 +140,66 @@ backend:
       - working: true
         agent: "testing"
         comment: "GET /api/data/clans endpoint tested successfully. Returns tracked clans list (currently empty as expected for fresh system). Status: 200, proper JSON response with tracked_clans array and count."
+
+  - task: "Player search with real data"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "GET /api/player/%23U8YQR92L tested successfully. Returns player 'Anirban' from clan 'Amber Amry' (#9PC99CP8). Player data includes TH18, 1099 trophies, and complete clan information. Status: 200."
+
+  - task: "Clan stats with collected data"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "GET /api/data/clan/%239PC99CP8/stats tested successfully. Shows substantial data collection: 246 player_snapshots, 6 clan_snapshots, 10 capital_raids. ML readiness confirmed for leadership, donations, and capital analysis. Status: 200."
+
+  - task: "Leadership ML analysis with real data"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "POST /api/ml/leadership/analyze tested successfully with clan #9PC99CP8. Returns leadership_entropy (3.097, distributed leadership type), top_leaders array with 10 members, and comprehensive analysis including Gini coefficient (0.835). Status: 200."
+
+  - task: "Donation ML analysis with real data"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "POST /api/ml/donations/analyze tested successfully with clan #9PC99CP8. Returns network_stats and top_contributors array with 10 members including centrality scores. Donation network analysis working correctly. Status: 200."
+
+  - task: "Capital ML analysis with real data"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "POST /api/ml/capital/analyze tested successfully with clan #9PC99CP8. Returns contribution_analysis with 13 player_profiles including average contributions (top contributor: 20,083 average). Capital investment analysis working correctly. Status: 200."
 
 frontend:
   # No frontend testing requested in this review
