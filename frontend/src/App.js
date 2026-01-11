@@ -55,77 +55,94 @@ const Landing = () => {
         {/* Player Search */}
         <PlayerSearch />
 
-        {/* ML Modules Grid */}
-        <h2 className="text-3xl font-bold text-white mb-8 text-center">7 Research Modules</h2>
+        {/* ML Modules Grid with CoC styling */}
+        <h2 className="text-4xl font-bold text-coc-gold mb-8 text-center uppercase">⚔️ 7 Battle Analysis Modules ⚔️</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {[
             {
               num: 1,
               title: 'Leadership Entropy',
-              desc: 'Infer latent leadership structures from behavior',
+              desc: 'Discover your clan\'s true leaders through behavioral analysis',
               concepts: ['Shannon Entropy', 'Network Analysis', 'Bayesian Models'],
-              color: 'from-blue-500 to-cyan-500'
+              icon: '👑',
+              color: 'from-yellow-600 to-yellow-800'
             },
             {
               num: 2,
               title: 'Pressure Function',
-              desc: 'Model performance under situational pressure',
+              desc: 'Who performs under pressure? Find your clutch players',
               concepts: ['Gaussian Processes', 'Variance Modeling', 'Beta Distribution'],
-              color: 'from-purple-500 to-pink-500'
+              icon: '🎯',
+              color: 'from-red-600 to-red-800'
             },
             {
               num: 3,
               title: 'Coordination Analysis',
-              desc: 'Detect strategic coordination patterns',
+              desc: 'Measure your clan\'s teamwork and strategic coordination',
               concepts: ['Point Processes', 'Hidden Markov Models', 'Motif Detection'],
-              color: 'from-green-500 to-emerald-500'
+              icon: '🤝',
+              color: 'from-green-600 to-green-800'
             },
             {
               num: 4,
               title: 'Trophy Volatility',
-              desc: 'Stochastic process modeling of rank dynamics',
+              desc: 'Predict trophy trajectories and identify tilt patterns',
               concepts: ['Ornstein-Uhlenbeck', 'Monte Carlo', 'Kalman Filtering'],
-              color: 'from-orange-500 to-red-500'
+              icon: '🏆',
+              color: 'from-orange-600 to-orange-800'
             },
             {
               num: 5,
               title: 'Donation Networks',
-              desc: 'Economic graph theory and resource flows',
+              desc: 'Visualize resource flows and detect free-riders',
               concepts: ['Graph Analytics', 'Gini Coefficient', 'PageRank'],
-              color: 'from-yellow-500 to-orange-500'
+              icon: '💎',
+              color: 'from-purple-600 to-purple-800'
             },
             {
               num: 6,
               title: 'Capital Investment',
-              desc: 'Game theory and collective action problems',
+              desc: 'Analyze raid weekend contributions and predict success',
               concepts: ['Public Goods Game', 'Causal Inference', 'Free-Rider Detection'],
-              color: 'from-indigo-500 to-purple-500'
+              icon: '🏰',
+              color: 'from-blue-600 to-blue-800'
             },
             {
               num: 7,
               title: 'Matchmaking Fairness',
-              desc: 'Algorithmic bias detection and fairness audit',
+              desc: 'Audit war matchmaking for systematic biases',
               concepts: ['Demographic Parity', 'Propensity Scores', 'A/B Testing'],
-              color: 'from-pink-500 to-rose-500'
+              icon: '⚖️',
+              color: 'from-pink-600 to-pink-800'
             }
           ].map((module) => (
             <div
               key={module.num}
-              className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 hover:border-white/40 transition-all hover:scale-105 cursor-pointer"
+              className="coc-card p-6 module-card fade-in-up"
               onClick={() => navigate(`/module/${module.num}`)}
               data-testid={`module-${module.num}-card`}
             >
-              <div className={`text-3xl font-bold bg-gradient-to-r ${module.color} text-transparent bg-clip-text mb-2`}>
-                Module {module.num}
+              <div className="flex items-center gap-3 mb-3">
+                <div className="coc-badge w-16 h-16 text-3xl">
+                  {module.icon}
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-coc-gold">
+                    Module {module.num}
+                  </div>
+                  <h3 className="text-lg font-bold text-yellow-100">{module.title}</h3>
+                </div>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">{module.title}</h3>
-              <p className="text-blue-200 text-sm mb-4">{module.desc}</p>
+              <p className="text-yellow-200 text-sm mb-4">{module.desc}</p>
               <div className="flex flex-wrap gap-2">
                 {module.concepts.map((concept, idx) => (
-                  <span key={idx} className="text-xs bg-white/20 px-2 py-1 rounded text-white">
+                  <span key={idx} className="text-xs bg-gradient-to-r from-amber-900 to-amber-800 px-3 py-1 rounded-full text-yellow-100 border border-amber-700">
                     {concept}
                   </span>
                 ))}
+              </div>
+            </div>
+          ))}
               </div>
             </div>
           ))}
