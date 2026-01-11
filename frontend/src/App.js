@@ -143,9 +143,6 @@ const Landing = () => {
               </div>
             </div>
           ))}
-              </div>
-            </div>
-          ))}
         </div>
 
         {/* Learning Path with CoC styling */}
