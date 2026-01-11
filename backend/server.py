@@ -694,6 +694,23 @@ async def get_clan_ml_dashboard(clan_tag: str):
 
 
 # ============================================================================
+# SYSTEM ENDPOINTS
+# ============================================================================
+
+@api_router.get("/system/ip")
+async def get_system_ip():
+    """Get the current system IP address for API key configuration."""
+    import httpx
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get("https://api.ipify.org?format=json", timeout=5)
+            data = response.json()
+            return {"ip": data.get("ip", "Unknown")}
+    except Exception:
+        return {"ip": "Unable to fetch - check manually"}
+
+
+# ============================================================================
 # ROOT ENDPOINT
 # ============================================================================
 
