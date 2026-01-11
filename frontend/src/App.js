@@ -339,83 +339,33 @@ const Dashboard = () => {
   );
 };
 
-// Module Detail Page
+// Module Detail Page - Route to specific module components
 const ModuleDetail = ({ moduleNum }) => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const clanTag = '#DEMO001';
-
-  const moduleInfo = {
-    1: { 
-      title: 'Leadership Entropy', 
-      endpoint: '/ml/leadership/analyze',
-      color: 'blue',
-      explanation: 'This model uses Shannon entropy to measure how decision-making authority is distributed in the clan. Low entropy means centralized leadership (one dominant leader), while high entropy indicates democratic structure.'
-    },
-    5: { 
-      title: 'Donation Network', 
-      endpoint: '/ml/donations/analyze',
-      color: 'green',
-      explanation: 'Models the clan as an economic network where donations flow between members. Uses graph theory to identify key contributors, detect free-riders, and measure reciprocity using the Gini coefficient.'
-    },
-    6: { 
-      title: 'Capital Investment', 
-      endpoint: '/ml/capital/analyze',
-      color: 'orange',
-      explanation: 'Analyzes clan capital as a collective action problem from game theory. Detects free-riders who benefit without contributing and tests if contribution patterns predict raid success better than raw capital level.'
-    },
-    7: { 
-      title: 'Matchmaking Fairness', 
-      endpoint: '/ml/fairness/audit',
-      color: 'pink',
-      explanation: 'Audits the matchmaking algorithm for systematic biases using fairness metrics from ML ethics. Tests demographic parity and uses statistical tests to detect if certain clan profiles have advantages.'
-    }
-  };
-
-  useEffect(() => {
-    loadData();
-  }, [moduleNum]);
-
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      const info = moduleInfo[moduleNum];
-      if (!info) return;
-
-      const response = await axios.post(`${API}${info.endpoint}`, {
-        clan_tag: clanTag
-      });
-      setData(response.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const info = moduleInfo[moduleNum];
-  if (!info) {
-    return <div className="min-h-screen bg-gradient-to-br from-blue-950 via-purple-900 to-blue-950 flex items-center justify-center text-white">Module coming soon...</div>;
+  // Import the educational module component
+  const Module1 = require('./components/Module1Leadership').default;
+  
+  // Route to appropriate module
+  if (moduleNum === 1) {
+    return <Module1 />;
   }
-
+  
+  // For other modules, show coming soon
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-950 via-purple-900 to-blue-950">
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="mb-8">
-          <Link to="/dashboard" className="text-blue-300 hover:text-blue-100 mb-4 inline-block">← Back to Dashboard</Link>
-          <h1 className="text-4xl font-bold text-white mb-2" data-testid="module-title">Module {moduleNum}: {info.title}</h1>
-          <p className="text-blue-200">{info.explanation}</p>
+        <div className="text-center">
+          <Link to="/dashboard" className="text-blue-300 hover:text-blue-100 mb-8 inline-block">← Back to Dashboard</Link>
+          <h1 className="text-5xl font-bold text-white mb-4">Module {moduleNum}</h1>
+          <p className="text-xl text-blue-200 mb-8">
+            Detailed educational content for this module is being prepared!
+          </p>
+          <p className="text-blue-300 mb-4">
+            For now, you can explore the source code at:
+          </p>
+          <code className="text-yellow-300 bg-black/30 px-4 py-2 rounded">
+            /app/backend/ml_module_{moduleNum}_*.py
+          </code>
         </div>
-
-        {loading ? (
-          <div className="text-white">Loading analysis...</div>
-        ) : (
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
-            <pre className="text-white text-sm overflow-auto max-h-96 bg-black/20 p-4 rounded">
-              {JSON.stringify(data, null, 2)}
-            </pre>
-          </div>
-        )}
       </div>
     </div>
   );
