@@ -13,41 +13,43 @@ const Landing = () => {
   const navigate = useNavigate();
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-purple-900 to-blue-950">
+    <div className="min-h-screen bg-coc-dark coc-wood-bg">
       <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Header */}
+        {/* Header with CoC styling */}
         <div className="text-center mb-16">
-          <h1 className="text-6xl font-bold text-white mb-4" data-testid="main-title">
-            Clash of Clans
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+          <h1 className="text-6xl font-bold text-coc-gold mb-4 gold-shine" data-testid="main-title">
+            ⚔️ CLASH OF CLANS ⚔️
+            <span className="block text-5xl mt-2">
               ML Research Platform
             </span>
           </h1>
-          <p className="text-xl text-blue-200 max-w-3xl mx-auto">
-            Learn machine learning by reverse-engineering production-grade models
+          <p className="text-xl text-yellow-200 max-w-3xl mx-auto">
+            Learn machine learning by analyzing YOUR clan's battle strategies
           </p>
         </div>
 
-        {/* Quick Start */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 mb-12 border border-white/20">
-          <h2 className="text-2xl font-bold text-white mb-4">🚀 Quick Start</h2>
-          <p className="text-blue-200 mb-6">
-            Demo data is already loaded! Click below to explore ML models:
+        {/* Quick Start with CoC cards */}
+        <div className="coc-card p-8 mb-12">
+          <h2 className="text-3xl font-bold text-coc-gold mb-4 uppercase">🏆 Your Clan is Ready</h2>
+          <p className="text-yellow-100 mb-6">
+            <strong className="text-coc-gold">Arceus</strong> from <strong className="text-coc-gold">Mystic Legions</strong> - Your data is being analyzed!
           </p>
-          <button
-            onClick={() => navigate('/unified-dashboard')}
-            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl hover:scale-105 transition-all mr-4"
-            data-testid="unified-dashboard-btn"
-          >
-            🎯 Unified Dashboard (All 7 Models) →
-          </button>
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl hover:scale-105 transition-all"
-            data-testid="explore-dashboard-btn"
-          >
-            📊 Demo Dashboard →
-          </button>
+          <div className="flex flex-wrap gap-4">
+            <button
+              onClick={() => navigate('/unified-dashboard')}
+              className="coc-button px-8 py-4 text-lg"
+              data-testid="unified-dashboard-btn"
+            >
+              ⚔️ Battle Analysis (All 7 Models)
+            </button>
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="coc-button px-8 py-4 text-lg bg-gradient-to-b from-green-500 to-green-700"
+              data-testid="explore-dashboard-btn"
+            >
+              🎮 Demo Dashboard
+            </button>
+          </div>
         </div>
 
         {/* Player Search */}
