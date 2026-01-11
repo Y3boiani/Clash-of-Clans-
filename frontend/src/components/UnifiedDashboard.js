@@ -381,35 +381,76 @@ const LeadershipTab = ({ data }) => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
-        <h2 className="text-2xl font-bold text-white mb-6">Top 10 Influential Leaders</h2>
+      {/* Leadership Network Visualization */}
+      <div className="coc-card p-6 border-4">
+        <h2 className="text-2xl font-bold text-coc-gold mb-6 flex items-center gap-3">
+          <span className="coc-icon text-xl">👑</span>
+          Clan Hierarchy Visualization
+        </h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div>
+            <LeadershipNetwork 
+              leaders={data.top_leaders || []}
+              entropy={data.leadership_entropy?.entropy}
+              leadershipType={data.leadership_entropy?.leadership_type}
+            />
+          </div>
+          <div className="space-y-4">
+            <div className="bg-black/30 p-4 rounded-lg border border-amber-900/50">
+              <h4 className="text-coc-gold font-bold mb-2">📊 What is Leadership Entropy?</h4>
+              <p className="text-yellow-200 text-sm">
+                Shannon Entropy measures how distributed power is in your clan. 
+                Higher entropy = more shared leadership. Lower entropy = concentrated power.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-black/30 p-3 rounded-lg text-center">
+                <div className="text-3xl font-bold text-coc-gold">{data.leadership_entropy?.entropy?.toFixed(2)}</div>
+                <div className="text-xs text-yellow-200 uppercase">Entropy (bits)</div>
+              </div>
+              <div className="bg-black/30 p-3 rounded-lg text-center">
+                <div className="text-3xl font-bold text-purple-400 capitalize">{data.leadership_entropy?.leadership_type}</div>
+                <div className="text-xs text-yellow-200 uppercase">Structure Type</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Top Leaders Table */}
+      <div className="coc-card p-6 border-4">
+        <h2 className="text-2xl font-bold text-coc-gold mb-6">⚔️ Top 10 Influential Warriors</h2>
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-white/5">
+          <table className="w-full coc-table">
+            <thead>
               <tr>
-                <th className="text-left p-3 text-blue-200">Rank</th>
-                <th className="text-left p-3 text-blue-200">Player</th>
-                <th className="text-left p-3 text-blue-200">Influence</th>
-                <th className="text-left p-3 text-blue-200">Role</th>
+                <th className="text-left p-3">Rank</th>
+                <th className="text-left p-3">Warrior</th>
+                <th className="text-left p-3">Influence Power</th>
+                <th className="text-left p-3">Role</th>
               </tr>
             </thead>
             <tbody>
               {data.top_leaders?.slice(0, 10).map((leader) => (
-                <tr key={leader.rank} className="border-t border-white/10">
-                  <td className="p-3 text-white font-bold">{leader.rank}</td>
-                  <td className="p-3 text-white">{leader.player_name}</td>
+                <tr key={leader.rank} className="border-t border-amber-900/30">
+                  <td className="p-3">
+                    <span className="coc-badge w-8 h-8 text-sm">
+                      {leader.rank <= 3 ? ['🥇', '🥈', '🥉'][leader.rank - 1] : leader.rank}
+                    </span>
+                  </td>
+                  <td className="p-3 text-yellow-100 font-bold">{leader.player_name}</td>
                   <td className="p-3">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-white/10 rounded-full h-2">
+                      <div className="flex-1 coc-progress-bar h-3">
                         <div
-                          className="bg-gradient-to-r from-blue-500 to-purple-500 h-full rounded-full"
+                          className="coc-progress-fill"
                           style={{ width: `${leader.influence_score * 100}%` }}
                         />
                       </div>
-                      <span className="text-white text-sm">{leader.influence_score.toFixed(3)}</span>
+                      <span className="text-coc-gold text-sm font-bold">{(leader.influence_score * 100).toFixed(1)}%</span>
                     </div>
                   </td>
-                  <td className="p-3 text-blue-200 capitalize">{leader.formal_role}</td>
+                  <td className="p-3 text-yellow-200 capitalize">{leader.formal_role}</td>
                 </tr>
               ))}
             </tbody>
