@@ -330,7 +330,7 @@ export const CapitalInvestmentViz = ({ freeRiders = 0, inequality = 'moderate', 
         {/* Inequality meter */}
         <g transform="translate(260, 120)">
           <text y="0" textAnchor="middle" fill="#8b6914" fontSize="8">INEQUALITY</text>
-          <text y="15" textAnchor="middle" fill={inequalityColors[inequality] || '#ffd700'} fontSize="10" fontWeight="bold" textTransform="uppercase">
+          <text y="15" textAnchor="middle" fill={inequalityColors[inequality] || '#ffd700'} fontSize="10" fontWeight="bold" style={{ textTransform: 'uppercase' }}>
             {inequality}
           </text>
         </g>
@@ -344,20 +344,17 @@ export const CapitalInvestmentViz = ({ freeRiders = 0, inequality = 'moderate', 
 // Animated balance scale showing matchmaking fairness
 // ==========================================
 export const FairnessScaleViz = ({ grade = 'B', winRate = 0.5, warsAnalyzed = 0 }) => {
-  const [scaleAngle, setScaleAngle] = useState(0);
+  // Calculate tilt based on win rate (0.5 = balanced)
+  const scaleAngle = (winRate - 0.5) * 30; // Max 15 degree tilt
   const [pulseScale, setPulseScale] = useState(1);
   
   useEffect(() => {
-    // Calculate tilt based on win rate (0.5 = balanced)
-    const tilt = (winRate - 0.5) * 30; // Max 15 degree tilt
-    setScaleAngle(tilt);
-    
     // Pulse animation
     const pulseInterval = setInterval(() => {
       setPulseScale(prev => prev === 1 ? 1.05 : 1);
     }, 1000);
     return () => clearInterval(pulseInterval);
-  }, [winRate]);
+  }, []);
 
   const gradeColors = {
     'A+': '#00ff00', 'A': '#32cd32', 'B+': '#7cfc00', 'B': '#ffd700',
