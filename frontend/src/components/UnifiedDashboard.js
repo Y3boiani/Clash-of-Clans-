@@ -160,131 +160,208 @@ export const UnifiedDashboard = () => {
 
 // Overview Tab
 const OverviewTab = ({ analyses }) => (
-  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {/* Leadership Summary */}
-    {analyses.leadership && !analyses.leadership.error && (
-      <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
-        <h3 className="text-2xl font-bold text-white mb-4">👑 Leadership Structure</h3>
-        <div className="space-y-3">
-          <div>
-            <div className="text-sm text-blue-200">Type</div>
-            <div className="text-xl font-bold text-blue-400 capitalize">
-              {analyses.leadership.leadership_entropy?.leadership_type}
+  <div className="space-y-8">
+    {/* Quick Stats Row with Animations */}
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {analyses.leadership && !analyses.leadership.error && (
+        <MiniStatViz 
+          type="leadership" 
+          value={analyses.leadership.leadership_entropy?.entropy || 0}
+          label="Leadership Entropy"
+          trend={analyses.leadership.leadership_entropy?.entropy > 2 ? 'up' : 'stable'}
+        />
+      )}
+      {analyses.donations && !analyses.donations.error && (
+        <MiniStatViz 
+          type="donation" 
+          value={analyses.donations.overall_health_score?.score || 0}
+          label="Donation Health"
+          trend="stable"
+        />
+      )}
+      {analyses.capital && !analyses.capital.error && (
+        <MiniStatViz 
+          type="capital" 
+          value={analyses.capital.contribution_analysis?.raids_analyzed || 0}
+          label="Raids Analyzed"
+          trend="up"
+        />
+      )}
+      {analyses.fairness && !analyses.fairness.error && (
+        <MiniStatViz 
+          type="fairness" 
+          value={(analyses.fairness.win_rates?.all_wars?.win_rate || 0) * 100}
+          label="Win Rate %"
+          trend={analyses.fairness.win_rates?.all_wars?.win_rate > 0.5 ? 'up' : 'down'}
+        />
+      )}
+    </div>
+
+    {/* Visualization Cards */}
+    <div className="grid md:grid-cols-2 gap-6">
+      {/* Leadership Visualization */}
+      {analyses.leadership && !analyses.leadership.error && (
+        <div className="coc-card p-6 border-4">
+          <h3 className="text-2xl font-bold text-coc-gold mb-4 flex items-center gap-3">
+            <span className="coc-icon text-xl">👑</span>
+            Leadership Network
+          </h3>
+          <LeadershipNetwork 
+            leaders={analyses.leadership.top_leaders || []}
+            entropy={analyses.leadership.leadership_entropy?.entropy}
+            leadershipType={analyses.leadership.leadership_entropy?.leadership_type}
+          />
+          <div className="mt-4 grid grid-cols-2 gap-4">
+            <div className="text-center">
+              <div className="text-sm text-yellow-200">Structure</div>
+              <div className="text-lg font-bold text-coc-gold capitalize">
+                {analyses.leadership.leadership_entropy?.leadership_type}
+              </div>
             </div>
-          </div>
-          <div>
-            <div className="text-sm text-blue-200">Entropy Score</div>
-            <div className="text-xl font-bold text-purple-400">
-              {analyses.leadership.leadership_entropy?.entropy?.toFixed(2)} bits
-            </div>
-          </div>
-          <div>
-            <div className="text-sm text-blue-200">Top Leader</div>
-            <div className="text-white">
-              {analyses.leadership.top_leaders?.[0]?.player_name}
+            <div className="text-center">
+              <div className="text-sm text-yellow-200">Top Leader</div>
+              <div className="text-lg font-bold text-white">
+                {analyses.leadership.top_leaders?.[0]?.player_name || 'N/A'}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
 
-    {/* Donations Summary */}
-    {analyses.donations && !analyses.donations.error && (
-      <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
-        <h3 className="text-2xl font-bold text-white mb-4">💰 Donation Economy</h3>
-        <div className="space-y-3">
-          <div>
-            <div className="text-sm text-blue-200">Health Grade</div>
-            <div className="text-4xl font-bold text-green-400">
-              {analyses.donations.overall_health_score?.grade}
+      {/* Donations Visualization */}
+      {analyses.donations && !analyses.donations.error && (
+        <div className="coc-card p-6 border-4">
+          <h3 className="text-2xl font-bold text-coc-gold mb-4 flex items-center gap-3">
+            <span className="coc-icon text-xl">💎</span>
+            Donation Economy
+          </h3>
+          <DonationFlowViz 
+            contributors={analyses.donations.top_contributors || []}
+            parasites={analyses.donations.parasites_detected || 0}
+            healthGrade={analyses.donations.overall_health_score?.grade || 'B'}
+          />
+          <div className="mt-4 grid grid-cols-2 gap-4">
+            <div className="text-center">
+              <div className="text-sm text-yellow-200">Reciprocity</div>
+              <div className="text-lg font-bold text-white capitalize">
+                {analyses.donations.reciprocity?.interpretation || 'N/A'}
+              </div>
             </div>
-          </div>
-          <div>
-            <div className="text-sm text-blue-200">Parasites Detected</div>
-            <div className="text-xl font-bold text-red-400">
-              {analyses.donations.parasites_detected}
-            </div>
-          </div>
-          <div>
-            <div className="text-sm text-blue-200">Reciprocity</div>
-            <div className="text-white capitalize">
-              {analyses.donations.reciprocity?.interpretation}
+            <div className="text-center">
+              <div className="text-sm text-yellow-200">Network Density</div>
+              <div className="text-lg font-bold text-purple-400">
+                {((analyses.donations.network_metrics?.density || 0) * 100).toFixed(1)}%
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
 
-    {/* Capital Summary */}
-    {analyses.capital && !analyses.capital.error && (
-      <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
-        <h3 className="text-2xl font-bold text-white mb-4">🏰 Capital Investment</h3>
-        <div className="space-y-3">
-          <div>
-            <div className="text-sm text-blue-200">Free Riders</div>
-            <div className="text-xl font-bold text-orange-400">
-              {analyses.capital.free_riders?.count || 0}
+      {/* Capital Investment Visualization */}
+      {analyses.capital && !analyses.capital.error && (
+        <div className="coc-card p-6 border-4">
+          <h3 className="text-2xl font-bold text-coc-gold mb-4 flex items-center gap-3">
+            <span className="coc-icon text-xl">🏰</span>
+            Capital Investment
+          </h3>
+          <CapitalInvestmentViz 
+            freeRiders={analyses.capital.free_riders?.count || 0}
+            inequality={analyses.capital.inequality?.interpretation || 'moderate'}
+            raidsAnalyzed={analyses.capital.contribution_analysis?.raids_analyzed || 0}
+          />
+          <div className="mt-4 grid grid-cols-2 gap-4">
+            <div className="text-center">
+              <div className="text-sm text-yellow-200">Gini Index</div>
+              <div className="text-lg font-bold text-orange-400">
+                {(analyses.capital.inequality?.gini_coefficient || 0).toFixed(3)}
+              </div>
             </div>
-          </div>
-          <div>
-            <div className="text-sm text-blue-200">Inequality Status</div>
-            <div className="text-white capitalize">
-              {analyses.capital.inequality?.interpretation}
-            </div>
-          </div>
-          <div>
-            <div className="text-sm text-blue-200">Raids Analyzed</div>
-            <div className="text-white">
-              {analyses.capital.contribution_analysis?.raids_analyzed || 0}
+            <div className="text-center">
+              <div className="text-sm text-yellow-200">Avg Contribution</div>
+              <div className="text-lg font-bold text-green-400">
+                {Math.round(analyses.capital.contribution_analysis?.mean_contribution || 0)}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
 
-    {/* Fairness Summary */}
-    {analyses.fairness && !analyses.fairness.error && (
-      <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
-        <h3 className="text-2xl font-bold text-white mb-4">⚖️ Matchmaking Fairness</h3>
-        <div className="space-y-3">
-          <div>
-            <div className="text-sm text-blue-200">Fairness Grade</div>
-            <div className="text-4xl font-bold text-blue-400">
-              {analyses.fairness.overall_grade?.grade}
+      {/* Fairness Visualization */}
+      {analyses.fairness && !analyses.fairness.error && (
+        <div className="coc-card p-6 border-4">
+          <h3 className="text-2xl font-bold text-coc-gold mb-4 flex items-center gap-3">
+            <span className="coc-icon text-xl">⚖️</span>
+            Matchmaking Fairness
+          </h3>
+          <FairnessScaleViz 
+            grade={analyses.fairness.overall_grade?.grade || 'B'}
+            winRate={analyses.fairness.win_rates?.all_wars?.win_rate || 0.5}
+            warsAnalyzed={analyses.fairness.wars_analyzed || 0}
+          />
+          <div className="mt-4 grid grid-cols-2 gap-4">
+            <div className="text-center">
+              <div className="text-sm text-yellow-200">Bias Score</div>
+              <div className="text-lg font-bold text-blue-400">
+                {(analyses.fairness.strength_bias?.bias_score || 0).toFixed(2)}
+              </div>
             </div>
-          </div>
-          <div>
-            <div className="text-sm text-blue-200">Win Rate</div>
-            <div className="text-xl font-bold text-purple-400">
-              {((analyses.fairness.win_rates?.all_wars?.win_rate || 0) * 100).toFixed(1)}%
-            </div>
-          </div>
-          <div>
-            <div className="text-sm text-blue-200">Wars Analyzed</div>
-            <div className="text-white">
-              {analyses.fairness.wars_analyzed || 0}
+            <div className="text-center">
+              <div className="text-sm text-yellow-200">Description</div>
+              <div className="text-sm font-bold text-white">
+                {analyses.fairness.overall_grade?.description || 'N/A'}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
+    </div>
 
-    {/* Module Status Cards */}
-    <ModuleStatusCard
-      title="Pressure Analysis"
-      status="Needs War Data"
-      description="Requires individual attack data"
-    />
-    <ModuleStatusCard
-      title="Coordination Analysis"
-      status="Needs War Data"
-      description="Requires attack timing data"
-    />
-    <ModuleStatusCard
-      title="Trophy Volatility"
-      status="Collecting"
-      description="Needs 30 days of player snapshots"
-    />
+    {/* Pending Modules Section */}
+    <div className="coc-card p-6 border-4">
+      <h3 className="text-2xl font-bold text-coc-gold mb-4 flex items-center gap-3">
+        <span className="coc-icon text-xl">🔮</span>
+        Coming Soon - Data Collection in Progress
+      </h3>
+      <div className="grid md:grid-cols-3 gap-4">
+        <div className="bg-black/30 rounded-lg p-4 border border-amber-900/50">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-2xl">🎯</span>
+            <div>
+              <div className="font-bold text-yellow-100">Pressure Analysis</div>
+              <div className="text-xs text-yellow-200">Module 2</div>
+            </div>
+          </div>
+          <div className="text-sm text-yellow-200">Requires individual attack data from war logs</div>
+          <div className="coc-progress-bar h-2 mt-3">
+            <div className="coc-progress-fill" style={{ width: '30%' }}></div>
+          </div>
+        </div>
+        
+        <div className="bg-black/30 rounded-lg p-4 border border-amber-900/50">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-2xl">🤝</span>
+            <div>
+              <div className="font-bold text-yellow-100">Coordination Analysis</div>
+              <div className="text-xs text-yellow-200">Module 3</div>
+            </div>
+          </div>
+          <CoordinationHeatmap />
+          <div className="text-xs text-yellow-200 mt-2">Preview: Attack timing patterns</div>
+        </div>
+        
+        <div className="bg-black/30 rounded-lg p-4 border border-amber-900/50">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-2xl">🏆</span>
+            <div>
+              <div className="font-bold text-yellow-100">Trophy Volatility</div>
+              <div className="text-xs text-yellow-200">Module 4</div>
+            </div>
+          </div>
+          <TrophyVolatilityViz prediction="stable" />
+          <div className="text-xs text-yellow-200 mt-2">Needs 30+ days of snapshots</div>
+        </div>
+      </div>
+    </div>
   </div>
 );
 
