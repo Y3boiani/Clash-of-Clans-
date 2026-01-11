@@ -24,7 +24,7 @@ const Landing = () => {
             </span>
           </h1>
           <p className="text-xl text-yellow-200 max-w-3xl mx-auto">
-            Learn machine learning by analyzing YOUR clan's battle strategies
+            Learn machine learning by analyzing YOUR clan&apos;s battle strategies
           </p>
         </div>
 
