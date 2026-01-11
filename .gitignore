@@ -40,3 +40,7 @@ htmlcov/
 
 # MongoDB data (if local)
 data/db/
+-e 
+# Environment files
+*.env
+*.env.*
