@@ -148,29 +148,49 @@ const Landing = () => {
           ))}
         </div>
 
-        {/* Learning Path */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
-          <h2 className="text-2xl font-bold text-white mb-4">📚 Recommended Learning Path</h2>
-          <div className="space-y-4">
+        {/* Learning Path with CoC styling */}
+        <div className="coc-card p-8 border-4">
+          <h2 className="text-3xl font-bold text-coc-gold mb-6 uppercase flex items-center gap-3">
+            <span className="coc-badge w-12 h-12 text-2xl">📚</span>
+            Training Path
+          </h2>
+          <div className="space-y-6">
             <div className="flex items-start gap-4">
-              <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">1</div>
-              <div>
-                <div className="text-white font-semibold">Beginners: Start with Module 5 (Donations)</div>
-                <div className="text-blue-200 text-sm">Most intuitive - learn graphs, Gini coefficient, network analysis</div>
+              <div className="coc-badge w-16 h-16 flex-shrink-0">
+                <span className="text-2xl font-bold text-coc-gold">1</span>
+              </div>
+              <div className="flex-1">
+                <div className="text-yellow-100 font-bold text-lg mb-1">🎯 Recruit: Start with Module 5 (Donations)</div>
+                <div className="text-yellow-200 text-sm">Learn graphs, Gini coefficient, network analysis - perfect for beginners</div>
+                <div className="coc-progress-bar h-2 mt-2">
+                  <div className="coc-progress-fill" style={{ width: '100%' }}></div>
+                </div>
               </div>
             </div>
+            <div className="coc-divider"></div>
             <div className="flex items-start gap-4">
-              <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">2</div>
-              <div>
-                <div className="text-white font-semibold">Intermediate: Module 4 (Volatility)</div>
-                <div className="text-blue-200 text-sm">Stochastic processes, forecasting, Monte Carlo simulation</div>
+              <div className="coc-badge w-16 h-16 flex-shrink-0">
+                <span className="text-2xl font-bold text-coc-gold">2</span>
+              </div>
+              <div className="flex-1">
+                <div className="text-yellow-100 font-bold text-lg mb-1">⚔️ Warrior: Module 4 (Volatility)</div>
+                <div className="text-yellow-200 text-sm">Stochastic processes, forecasting, Monte Carlo - intermediate level</div>
+                <div className="coc-progress-bar h-2 mt-2">
+                  <div className="coc-progress-fill bg-gradient-to-r from-yellow-400 to-yellow-600" style={{ width: '60%' }}></div>
+                </div>
               </div>
             </div>
+            <div className="coc-divider"></div>
             <div className="flex items-start gap-4">
-              <div className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">3</div>
-              <div>
-                <div className="text-white font-semibold">Advanced: Module 7 (Fairness)</div>
-                <div className="text-blue-200 text-sm">Causal inference, bias detection, algorithmic fairness</div>
+              <div className="coc-badge w-16 h-16 flex-shrink-0">
+                <span className="text-2xl font-bold text-coc-gold">3</span>
+              </div>
+              <div className="flex-1">
+                <div className="text-yellow-100 font-bold text-lg mb-1">🏆 Champion: Module 7 (Fairness)</div>
+                <div className="text-yellow-200 text-sm">Causal inference, bias detection - master level</div>
+                <div className="coc-progress-bar h-2 mt-2">
+                  <div className="coc-progress-fill bg-gradient-to-r from-purple-400 to-purple-600" style={{ width: '30%' }}></div>
+                </div>
               </div>
             </div>
           </div>
