@@ -11,6 +11,19 @@ const API = `${BACKEND_URL}/api`;
 // Main Landing Page
 const Landing = () => {
   const navigate = useNavigate();
+  const [foundPlayer, setFoundPlayer] = useState(null);
+  const [systemIp, setSystemIp] = useState('Loading...');
+  
+  useEffect(() => {
+    // Fetch current system IP
+    axios.get(`${API}/system/ip`).then(res => {
+      setSystemIp(res.data.ip || 'Unknown');
+    }).catch(() => setSystemIp('Unable to fetch'));
+  }, []);
+
+  const handlePlayerFound = (data) => {
+    setFoundPlayer(data);
+  };
   
   return (
     <div className="min-h-screen bg-coc-dark coc-wood-bg">
@@ -28,32 +41,57 @@ const Landing = () => {
           </p>
         </div>
 
-        {/* Quick Start with CoC cards */}
-        <div className="coc-card p-8 mb-12">
-          <h2 className="text-3xl font-bold text-coc-gold mb-4 uppercase">🏆 Your Clan is Ready</h2>
-          <p className="text-yellow-100 mb-6">
-            <strong className="text-coc-gold">Arceus</strong> from <strong className="text-coc-gold">Mystic Legions</strong> - Your data is being analyzed!
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <button
-              onClick={() => navigate('/unified-dashboard')}
-              className="coc-button px-8 py-4 text-lg"
-              data-testid="unified-dashboard-btn"
-            >
-              ⚔️ Battle Analysis (All 7 Models)
-            </button>
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="coc-button px-8 py-4 text-lg bg-gradient-to-b from-green-500 to-green-700"
-              data-testid="explore-dashboard-btn"
-            >
-              🎮 Demo Dashboard
-            </button>
+        {/* Dynamic Player Card - Shows after search */}
+        {foundPlayer && (
+          <div className="coc-card p-8 mb-12 border-4 border-green-500">
+            <h2 className="text-3xl font-bold text-coc-gold mb-4 uppercase">🏆 Player Found!</h2>
+            <p className="text-yellow-100 mb-6">
+              <strong className="text-coc-gold">{foundPlayer.player?.name}</strong>
+              {foundPlayer.clan && (
+                <> from <strong className="text-coc-gold">{foundPlayer.clan?.name}</strong></>
+              )}
+              {' '}- Ready to analyze!
+            </p>
+            <div className="flex flex-wrap gap-4">
+              {foundPlayer.clan && (
+                <button
+                  onClick={() => navigate(`/unified-dashboard?clan=${encodeURIComponent(foundPlayer.clan.tag)}`)}
+                  className="coc-button px-8 py-4 text-lg"
+                  data-testid="analyze-clan-btn"
+                >
+                  ⚔️ Analyze Clan (All 7 Models)
+                </button>
+              )}
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="coc-button px-8 py-4 text-lg bg-gradient-to-b from-green-500 to-green-700"
+                data-testid="explore-dashboard-btn"
+              >
+                🎮 Demo Dashboard
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Player Search */}
-        <PlayerSearch />
+        <PlayerSearch onPlayerFound={handlePlayerFound} />
+        
+        {/* API Key Setup Notice */}
+        <div className="coc-card p-6 mb-12 border-2 border-yellow-500">
+          <h3 className="text-xl font-bold text-coc-gold mb-3">🔑 API Key Setup Required</h3>
+          <p className="text-yellow-200 text-sm mb-3">
+            To search for players, your Clash of Clans API key must allow this server&apos;s IP address:
+          </p>
+          <div className="bg-black/50 p-3 rounded-lg mb-3">
+            <code className="text-green-400 text-lg font-mono">{systemIp}</code>
+          </div>
+          <ol className="text-yellow-200 text-sm space-y-1 list-decimal list-inside">
+            <li>Go to <a href="https://developer.clashofclans.com" target="_blank" rel="noreferrer" className="text-blue-400 underline">developer.clashofclans.com</a></li>
+            <li>Edit your API key or create a new one</li>
+            <li>Add the IP address shown above to the allowed IPs</li>
+            <li>Update the COC_API_KEY in /app/backend/.env</li>
+          </ol>
+        </div>
 
         {/* ML Modules Grid with CoC styling */}
         <h2 className="text-4xl font-bold text-coc-gold mb-8 text-center uppercase">⚔️ 7 Battle Analysis Modules ⚔️</h2>
