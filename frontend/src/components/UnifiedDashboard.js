@@ -65,67 +65,68 @@ export const UnifiedDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-purple-900 to-blue-950">
+    <div className="min-h-screen bg-coc-dark coc-wood-bg">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <Link to="/" className="text-blue-300 hover:text-blue-100 mb-4 inline-block">
-            ← Back to Home
+          <Link to="/" className="text-coc-gold hover:text-yellow-300 mb-4 inline-block font-semibold">
+            ← Return to Base
           </Link>
-          <h1 className="text-5xl font-bold text-white mb-2" data-testid="unified-dashboard-title">
-            Unified ML Dashboard
+          <h1 className="text-5xl font-bold text-coc-gold mb-2 gold-shine uppercase" data-testid="unified-dashboard-title">
+            ⚔️ War Room Dashboard ⚔️
           </h1>
-          <p className="text-xl text-blue-200">
-            Complete analysis of <span className="text-yellow-300">Mystic Legions</span> clan
+          <p className="text-2xl text-yellow-200">
+            Complete battle analysis of <span className="text-coc-gold font-bold">Mystic Legions</span>
           </p>
         </div>
 
         {/* Data Stats Banner */}
         {dataStats && (
-          <div className="bg-gradient-to-r from-blue-900/40 to-purple-900/40 rounded-xl p-6 mb-8 border border-blue-500/30">
-            <h3 className="text-white font-bold mb-4">📊 Data Collection Status</h3>
+          <div className="coc-card p-6 mb-8 border-4">
+            <h3 className="text-2xl font-bold text-coc-gold mb-4 uppercase flex items-center gap-3">
+              <span className="coc-icon">📊</span>
+              Intelligence Gathered
+            </h3>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-              <div>
-                <div className="text-3xl font-bold text-blue-400">{dataStats.data_availability.player_snapshots}</div>
-                <div className="text-sm text-blue-200">Player Snapshots</div>
+              <div className="coc-stat-box">
+                <div className="text-4xl font-bold text-coc-gold mb-1">{dataStats.data_availability.player_snapshots}</div>
+                <div className="text-xs text-yellow-200 uppercase">Warriors</div>
               </div>
-              <div>
-                <div className="text-3xl font-bold text-purple-400">{dataStats.data_availability.wars}</div>
-                <div className="text-sm text-blue-200">Wars</div>
+              <div className="coc-stat-box">
+                <div className="text-4xl font-bold text-orange-400 mb-1">{dataStats.data_availability.wars}</div>
+                <div className="text-xs text-yellow-200 uppercase">Battles</div>
               </div>
-              <div>
-                <div className="text-3xl font-bold text-green-400">{dataStats.data_availability.war_attacks}</div>
-                <div className="text-sm text-blue-200">Attacks</div>
+              <div className="coc-stat-box">
+                <div className="text-4xl font-bold text-red-400 mb-1">{dataStats.data_availability.war_attacks}</div>
+                <div className="text-xs text-yellow-200 uppercase">Attacks</div>
               </div>
-              <div>
-                <div className="text-3xl font-bold text-orange-400">{dataStats.data_availability.capital_raids}</div>
-                <div className="text-sm text-blue-200">Capital Raids</div>
+              <div className="coc-stat-box">
+                <div className="text-4xl font-bold text-purple-400 mb-1">{dataStats.data_availability.capital_raids}</div>
+                <div className="text-xs text-yellow-200 uppercase">Raids</div>
               </div>
-              <div>
-                <div className="text-3xl font-bold text-yellow-400">{dataStats.data_availability.days_of_data}</div>
-                <div className="text-sm text-blue-200">Days of Data</div>
+              <div className="coc-stat-box">
+                <div className="text-4xl font-bold text-green-400 mb-1">{dataStats.data_availability.days_of_data}</div>
+                <div className="text-xs text-yellow-200 uppercase">Days</div>
               </div>
             </div>
           </div>
         )}
 
         {/* Navigation Tabs */}
-        <div className="flex gap-2 mb-6 overflow-x-auto">
+        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
           {[
-            { id: 'overview', label: '📋 Overview', icon: '📋' },
-            { id: 'leadership', label: '👑 Leadership', icon: '👑' },
-            { id: 'donations', label: '💰 Donations', icon: '💰' },
-            { id: 'capital', label: '🏰 Capital', icon: '🏰' },
-            { id: 'fairness', label: '⚖️ Fairness', icon: '⚖️' },
-            { id: 'backend', label: '🔧 Backend Flow', icon: '🔧' },
+            { id: 'overview', label: '📋 Overview' },
+            { id: 'leadership', label: '👑 Leadership' },
+            { id: 'donations', label: '💎 Donations' },
+            { id: 'capital', label: '🏰 Capital' },
+            { id: 'fairness', label: '⚖️ Fairness' },
+            { id: 'backend', label: '🔧 Backend' },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap ${
-                activeTab === tab.id
-                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl'
-                  : 'bg-white/10 text-blue-200 hover:bg-white/20'
+              className={`coc-tab px-6 py-3 rounded-t-lg font-bold transition-all whitespace-nowrap ${
+                activeTab === tab.id ? 'active' : ''
               }`}
               data-testid={`tab-${tab.id}`}
             >
