@@ -248,7 +248,8 @@ async def main():
     tester = BackendTester(BACKEND_URL)
     
     try:
-        results = await tester.run_health_checks()
+        # Run the real data tests as requested in the review
+        results = await tester.run_real_data_tests()
         tester.print_summary()
         
         # Return results for further processing
