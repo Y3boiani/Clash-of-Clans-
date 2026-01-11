@@ -35,11 +35,18 @@ const Landing = () => {
             Demo data is already loaded! Click below to explore ML models:
           </p>
           <button
+            onClick={() => navigate('/unified-dashboard')}
+            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl hover:scale-105 transition-all mr-4"
+            data-testid="unified-dashboard-btn"
+          >
+            🎯 Unified Dashboard (All 7 Models) →
+          </button>
+          <button
             onClick={() => navigate('/dashboard')}
-            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl hover:scale-105 transition-all"
+            className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl hover:scale-105 transition-all"
             data-testid="explore-dashboard-btn"
           >
-            Explore ML Dashboard →
+            📊 Demo Dashboard →
           </button>
         </div>
 
