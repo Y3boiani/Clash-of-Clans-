@@ -44,6 +44,26 @@ Build an in-depth, novel machine learning research platform using data from the 
 - Module cards with concept badges
 - Training path section for learning progression
 
+### Animated Visualizations (NEW - December 2025)
+Created `/app/frontend/src/components/MLVisualizations.js` with:
+1. **LeadershipNetwork** - Animated hierarchical network showing clan influence flow with pulsing nodes
+2. **DonationFlowViz** - Animated stream diagram showing resource flow between players with gem animation
+3. **CapitalInvestmentViz** - Animated bar chart with growing bars and castle icons
+4. **FairnessScaleViz** - Animated balance scale showing matchmaking balance with pulse effects
+5. **TrophyVolatilityViz** - Animated line chart showing trophy trajectory with prediction indicator
+6. **CoordinationHeatmap** - Interactive heatmap showing attack timing patterns
+7. **MiniStatViz** - Animated counter cards with trend indicators
+
+### CSS Animations Added
+- Node pulse animations for network visualizations
+- Flow stream animations for donation streams
+- Scale balance animations
+- Trophy bounce effects
+- Glow pulse for important elements
+- Staggered fade-in animations
+- Bar chart grow animations
+- Heatmap cell hover effects
+
 ### Integration
 - CoC API key configured and working
 - User's clan data (Arceus from Mystic Legions) successfully collected
@@ -59,6 +79,7 @@ Build an in-depth, novel machine learning research platform using data from the 
 ## Bug Fixes (December 2025)
 - ✅ Fixed JSX syntax error in App.js (duplicate closing tags at lines 146-148)
 - ✅ Fixed ESLint unescaped apostrophe warning
+- ✅ Fixed ESLint setState synchronous warning in FairnessScaleViz
 
 ---
 
@@ -66,8 +87,7 @@ Build an in-depth, novel machine learning research platform using data from the 
 
 ### P1 (High Priority)
 - [ ] Fix `useEffect` missing dependency warning in App.js (line ~377)
-- [ ] Enhance UnifiedDashboard to show backend workflow visually
-- [ ] Add explanations for ML concepts in each module view
+- [ ] Add more educational explanations for each ML concept
 
 ### P2 (Medium Priority)
 - [ ] Add interactivity - click module summaries for detailed breakdowns
@@ -78,6 +98,7 @@ Build an in-depth, novel machine learning research platform using data from the 
 - [ ] Historical data trend visualizations
 - [ ] Player comparison features
 - [ ] Export/share analysis results
+- [ ] Real-time data refresh
 
 ---
 
