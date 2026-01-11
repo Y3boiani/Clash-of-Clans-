@@ -108,9 +108,12 @@ Created `/app/frontend/src/components/MLVisualizations.js` with:
 - **ML/Stats**: NetworkX, NumPy, SciPy
 
 ## Key API Endpoints
+- `GET /api/player/{player_tag}` - **NEW** Look up any player and auto-track their clan
 - `POST /api/clan/{clan_tag}` - Trigger data collection
 - `GET /api/ml/dashboard/{clan_tag}` - Get all 7 model results
 - `GET /api/ml/{model_name}/{clan_tag}` - Individual model results
+- `GET /api/system/ip` - Get current server IP for API key setup
 
 ## Third-Party Integration
 - Clash of Clans Official API (key in `/app/backend/.env`)
+- **IMPORTANT**: API key must include the server's IP address (currently `34.16.56.64`)
