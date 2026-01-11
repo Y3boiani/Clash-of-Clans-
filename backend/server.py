@@ -103,6 +103,67 @@ class MLAnalysisRequest(BaseModel):
 # DATA COLLECTION ENDPOINTS
 # ============================================================================
 
+@api_router.get("/player/{player_tag}")
+async def lookup_player(player_tag: str, background_tasks: BackgroundTasks):
+    """
+    Look up a player by tag and return their info + clan info.
+    This is the main entry point for users to search any player.
+    """
+    if not coc_client:
+        raise HTTPException(status_code=500, detail="CoC API client not initialized. Check COC_API_KEY.")
+    
+    # Format tag properly
+    if not player_tag.startswith('#') and not player_tag.startswith('%23'):
+        player_tag = '#' + player_tag
+    player_tag = player_tag.replace('%23', '#')
+    
+    # Fetch player from CoC API
+    player_data = await coc_client.get_player(player_tag)
+    if not player_data:
+        raise HTTPException(status_code=404, detail=f"Player {player_tag} not found in CoC API")
+    
+    # Extract clan info if player is in a clan
+    clan_info = player_data.get('clan', {})
+    clan_tag = clan_info.get('tag') if clan_info else None
+    
+    response = {
+        "player": {
+            "tag": player_data.get('tag'),
+            "name": player_data.get('name'),
+            "townHallLevel": player_data.get('townHallLevel'),
+            "trophies": player_data.get('trophies'),
+            "bestTrophies": player_data.get('bestTrophies'),
+            "warStars": player_data.get('warStars'),
+            "attackWins": player_data.get('attackWins'),
+            "defenseWins": player_data.get('defenseWins'),
+            "donations": player_data.get('donations'),
+            "donationsReceived": player_data.get('donationsReceived'),
+            "role": player_data.get('role'),
+            "expLevel": player_data.get('expLevel')
+        },
+        "clan": None
+    }
+    
+    # If player is in a clan, fetch clan data and start tracking
+    if clan_tag and data_collector:
+        clan_data = await coc_client.get_clan(clan_tag)
+        if clan_data:
+            response["clan"] = {
+                "tag": clan_data.get('tag'),
+                "name": clan_data.get('name'),
+                "clanLevel": clan_data.get('clanLevel'),
+                "members": clan_data.get('members'),
+                "warWins": clan_data.get('warWins'),
+                "warWinStreak": clan_data.get('warWinStreak'),
+                "description": clan_data.get('description', '')[:100]
+            }
+            # Auto-track clan in background
+            await data_collector.add_clan_to_track(clan_tag)
+            background_tasks.add_task(data_collector.collect_clan_snapshot, clan_tag)
+    
+    return response
+
+
 @api_router.post("/data/add-clan")
 async def add_clan_to_tracking(request: AddClanRequest, background_tasks: BackgroundTasks):
     """
