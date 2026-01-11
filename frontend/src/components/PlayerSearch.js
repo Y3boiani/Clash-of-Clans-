@@ -47,64 +47,61 @@ export const PlayerSearch = () => {
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
-      <h2 className="text-2xl font-bold text-white mb-4">🔍 Test with Your Account</h2>
+    <div className="coc-card p-8 border-4 mb-8">
+      <h2 className="text-3xl font-bold text-coc-gold mb-4 uppercase flex items-center gap-3">
+        <span className="coc-badge w-12 h-12 text-2xl">🔍</span>
+        Scout Your Account
+      </h2>
       
       <div className="mb-6">
-        <label className="block text-blue-200 mb-2">Enter Player or Clan Tag</label>
+        <label className="block text-yellow-100 mb-2 font-semibold">Enter Player or Clan Tag</label>
         <div className="flex gap-2">
           <input
             type="text"
             value={playerTag}
             onChange={(e) => setPlayerTag(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && searchPlayer()}
-            placeholder="e.g., #ABC123 or ABC123"
-            className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-300 focus:outline-none focus:border-blue-400"
+            placeholder="e.g., #2YJ2URLQJ"
+            className="flex-1 coc-input"
             data-testid="player-tag-input"
           />
           <button
             onClick={searchPlayer}
             disabled={loading}
-            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold hover:shadow-xl disabled:opacity-50 transition-all"
+            className="coc-button px-8 py-3"
             data-testid="search-player-btn"
           >
-            {loading ? 'Searching...' : 'Search'}
+            {loading ? '⏳ Searching...' : '🔍 Search'}
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 mb-4">
-          <div className="text-red-100 whitespace-pre-line">{error}</div>
-          <div className="mt-3 text-sm text-red-200">
-            <strong>Quick Fix:</strong>
-            <ol className="list-decimal list-inside mt-2 space-y-1">
-              <li>Go to <a href="https://developer.clashofclans.com/" target="_blank" rel="noopener noreferrer" className="underline">developer.clashofclans.com</a></li>
-              <li>Update your API key to include IP: <code className="bg-black/30 px-2 py-1 rounded">35.225.230.28</code></li>
-              <li>Try searching again</li>
-            </ol>
-          </div>
+        <div className="coc-alert coc-alert-error mb-4">
+          <div className="font-bold mb-2">⚠️ Battle Report</div>
+          <div className="whitespace-pre-line text-sm">{error}</div>
         </div>
       )}
 
       {playerData && (
-        <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4">
-          <div className="text-green-100">
-            ✅ Successfully connected to Clash of Clans API!
-          </div>
-          <div className="mt-3 text-sm text-green-200">
+        <div className="coc-alert coc-alert-success">
+          <div className="font-bold mb-2">✅ Successfully Connected!</div>
+          <div className="text-sm">
             <strong>Found:</strong> {playerData.clan_name || playerData.message}
           </div>
         </div>
       )}
 
       {/* Helper Section */}
-      <div className="mt-6 bg-blue-900/20 rounded-lg p-4">
-        <h3 className="text-white font-semibold mb-2">📋 How to Find Your Player Tag:</h3>
-        <ol className="text-blue-200 text-sm space-y-1 list-decimal list-inside">
-          <li>Open Clash of Clans</li>
-          <li>Tap your name at the top</li>
-          <li>Your player tag is below your name (starts with #)</li>
+      <div className="mt-6 coc-glass rounded-lg p-4">
+        <h3 className="text-yellow-100 font-bold mb-3 flex items-center gap-2">
+          <span className="coc-icon w-8 h-8 text-lg">📋</span>
+          How to Find Your Tag
+        </h3>
+        <ol className="text-yellow-200 text-sm space-y-2 list-decimal list-inside">
+          <li>Open Clash of Clans on your device</li>
+          <li>Tap your name/profile picture</li>
+          <li>Your tag is below your name (starts with #)</li>
           <li>Copy and paste it here</li>
         </ol>
       </div>
