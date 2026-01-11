@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-export const PlayerSearch = () => {
+export const PlayerSearch = ({ onPlayerFound }) => {
   const [playerTag, setPlayerTag] = useState('');
   const [loading, setLoading] = useState(false);
   const [playerData, setPlayerData] = useState(null);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const searchPlayer = async () => {
     if (!playerTag.trim()) {
@@ -21,28 +23,40 @@ export const PlayerSearch = () => {
     setPlayerData(null);
 
     try {
-      // Format tag (add # if missing)
-      let formattedTag = playerTag.trim();
+      // Format tag (add # if missing, then URL encode)
+      let formattedTag = playerTag.trim().toUpperCase();
       if (!formattedTag.startsWith('#')) {
         formattedTag = '#' + formattedTag;
       }
+      const encodedTag = formattedTag.replace('#', '%23');
 
-      // Test API by trying to get clan for the player
-      const response = await axios.post(`${API}/data/add-clan`, {
-        clan_tag: formattedTag
-      });
-
+      // Call the player lookup endpoint
+      const response = await axios.get(`${API}/player/${encodedTag}`);
+      
       setPlayerData(response.data);
+      
+      // Notify parent component if callback provided
+      if (onPlayerFound) {
+        onPlayerFound(response.data);
+      }
     } catch (err) {
       const errorMsg = err.response?.data?.detail || err.message;
       
-      if (errorMsg.includes('not found') || errorMsg.includes('API')) {
-        setError(`⚠️ API Issue: ${errorMsg}\n\nThis might mean:\n1. Player/Clan tag is incorrect\n2. API key needs IP address updated (35.225.230.28)\n3. API key permissions issue\n\nUsing demo data instead for learning!`);
+      if (err.response?.status === 404) {
+        setError(`❌ Player not found: "${playerTag}"\n\nMake sure you entered the correct player tag (starts with #).`);
+      } else if (errorMsg.includes('API') || errorMsg.includes('COC_API_KEY')) {
+        setError(`⚠️ API Configuration Issue: ${errorMsg}`);
       } else {
-        setError(errorMsg);
+        setError(`Error: ${errorMsg}`);
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const goToDashboard = () => {
+    if (playerData?.clan?.tag) {
+      navigate(`/unified-dashboard?clan=${encodeURIComponent(playerData.clan.tag)}`);
     }
   };
 
@@ -54,7 +68,7 @@ export const PlayerSearch = () => {
       </h2>
       
       <div className="mb-6">
-        <label className="block text-yellow-100 mb-2 font-semibold">Enter Player or Clan Tag</label>
+        <label className="block text-yellow-100 mb-2 font-semibold">Enter Player Tag</label>
         <div className="flex gap-2">
           <input
             type="text"
@@ -71,23 +85,60 @@ export const PlayerSearch = () => {
             className="coc-button px-8 py-3"
             data-testid="search-player-btn"
           >
-            {loading ? '⏳ Searching...' : '🔍 Search'}
+            {loading ? '⏳ Scouting...' : '🔍 Search'}
           </button>
         </div>
       </div>
 
       {error && (
         <div className="coc-alert coc-alert-error mb-4">
-          <div className="font-bold mb-2">⚠️ Battle Report</div>
+          <div className="font-bold mb-2">⚠️ Scout Report</div>
           <div className="whitespace-pre-line text-sm">{error}</div>
         </div>
       )}
 
       {playerData && (
         <div className="coc-alert coc-alert-success">
-          <div className="font-bold mb-2">✅ Successfully Connected!</div>
-          <div className="text-sm">
-            <strong>Found:</strong> {playerData.clan_name || playerData.message}
+          <div className="font-bold mb-3">✅ Player Found!</div>
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Player Info */}
+            <div className="bg-black/20 rounded-lg p-4">
+              <h4 className="text-coc-gold font-bold mb-2 flex items-center gap-2">
+                ⚔️ {playerData.player?.name}
+              </h4>
+              <div className="text-sm space-y-1 text-yellow-200">
+                <div>🏠 Town Hall: <span className="text-white">{playerData.player?.townHallLevel}</span></div>
+                <div>🏆 Trophies: <span className="text-white">{playerData.player?.trophies}</span></div>
+                <div>⭐ War Stars: <span className="text-white">{playerData.player?.warStars}</span></div>
+                <div>💎 Donations: <span className="text-white">{playerData.player?.donations}</span></div>
+              </div>
+            </div>
+            
+            {/* Clan Info */}
+            {playerData.clan ? (
+              <div className="bg-black/20 rounded-lg p-4">
+                <h4 className="text-coc-gold font-bold mb-2 flex items-center gap-2">
+                  🏰 {playerData.clan?.name}
+                </h4>
+                <div className="text-sm space-y-1 text-yellow-200">
+                  <div>📊 Level: <span className="text-white">{playerData.clan?.clanLevel}</span></div>
+                  <div>👥 Members: <span className="text-white">{playerData.clan?.members}/50</span></div>
+                  <div>🎖️ War Wins: <span className="text-white">{playerData.clan?.warWins}</span></div>
+                  <div>🔥 Win Streak: <span className="text-white">{playerData.clan?.warWinStreak}</span></div>
+                </div>
+                <button 
+                  onClick={goToDashboard}
+                  className="coc-button mt-3 w-full py-2 text-sm"
+                  data-testid="analyze-clan-btn"
+                >
+                  📊 Analyze This Clan
+                </button>
+              </div>
+            ) : (
+              <div className="bg-black/20 rounded-lg p-4 flex items-center justify-center">
+                <span className="text-yellow-200">Player is not in a clan</span>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -104,19 +155,6 @@ export const PlayerSearch = () => {
           <li>Your tag is below your name (starts with #)</li>
           <li>Copy and paste it here</li>
         </ol>
-      </div>
-
-      {/* Current System Status */}
-      <div className="mt-6 bg-yellow-900/20 rounded-lg p-4 border border-yellow-500/30">
-        <h3 className="text-white font-semibold mb-2">🔧 Current System Status:</h3>
-        <div className="text-yellow-200 text-sm space-y-1">
-          <div>• API Key: Configured ✅</div>
-          <div>• System IP: <code className="bg-black/30 px-2 py-1 rounded">35.225.230.28</code></div>
-          <div>• Allowed IP in Key: <code className="bg-black/30 px-2 py-1 rounded">36.255.16.54</code> ⚠️</div>
-          <div className="mt-2 text-yellow-300">
-            ⚠️ IP mismatch - Update your API key to include system IP above
-          </div>
-        </div>
       </div>
     </div>
   );
