@@ -553,18 +553,83 @@ const CapitalTab = ({ data }) => {
   }
 
   return (
-    <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
-      <h2 className="text-2xl font-bold text-white mb-4">Capital Investment Analysis</h2>
-      <div className="space-y-4">
-        <div>
-          <div className="text-sm text-blue-200">Free Riders Detected</div>
-          <div className="text-3xl font-bold text-orange-400">{data.free_riders?.count || 0}</div>
-        </div>
-        <div>
-          <div className="text-sm text-blue-200">Contribution Inequality</div>
-          <div className="text-xl text-white capitalize">{data.inequality?.interpretation}</div>
+    <div className="space-y-6">
+      {/* Capital Investment Visualization */}
+      <div className="coc-card p-6 border-4">
+        <h2 className="text-2xl font-bold text-coc-gold mb-6 flex items-center gap-3">
+          <span className="coc-icon text-xl">🏰</span>
+          Clan Capital Analysis
+        </h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div>
+            <CapitalInvestmentViz 
+              freeRiders={data.free_riders?.count || 0}
+              inequality={data.inequality?.interpretation || 'moderate'}
+              raidsAnalyzed={data.contribution_analysis?.raids_analyzed || 0}
+            />
+          </div>
+          <div className="space-y-4">
+            <div className="bg-black/30 p-4 rounded-lg border border-amber-900/50">
+              <h4 className="text-coc-gold font-bold mb-2">🎮 Public Goods Game Theory</h4>
+              <p className="text-yellow-200 text-sm">
+                Clan Capital is a classic public goods problem. We detect free-riders 
+                (who benefit without contributing) using contribution thresholds and 
+                Gini coefficient analysis.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-black/30 p-3 rounded-lg text-center">
+                <div className="text-3xl font-bold text-orange-400">{data.free_riders?.count || 0}</div>
+                <div className="text-xs text-yellow-200 uppercase">Free Riders</div>
+              </div>
+              <div className="bg-black/30 p-3 rounded-lg text-center">
+                <div className="text-3xl font-bold text-coc-gold">{data.contribution_analysis?.raids_analyzed || 0}</div>
+                <div className="text-xs text-yellow-200 uppercase">Raids Analyzed</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Contribution Stats */}
+      <div className="grid md:grid-cols-3 gap-6">
+        <div className="coc-card p-6 border-4 text-center">
+          <div className="text-4xl font-bold text-green-400 mb-2">
+            {Math.round(data.contribution_analysis?.mean_contribution || 0)}
+          </div>
+          <div className="text-yellow-200">Average Contribution</div>
+        </div>
+        <div className="coc-card p-6 border-4 text-center">
+          <div className="text-4xl font-bold text-purple-400 mb-2">
+            {(data.inequality?.gini_coefficient || 0).toFixed(3)}
+          </div>
+          <div className="text-yellow-200">Gini Coefficient</div>
+        </div>
+        <div className="coc-card p-6 border-4 text-center">
+          <div className="text-4xl font-bold capitalize" style={{ color: data.inequality?.interpretation === 'low' ? '#00ff00' : data.inequality?.interpretation === 'high' ? '#ff4500' : '#ffd700' }}>
+            {data.inequality?.interpretation || 'N/A'}
+          </div>
+          <div className="text-yellow-200">Inequality Level</div>
+        </div>
+      </div>
+
+      {/* Free Riders List */}
+      {data.free_riders?.players && data.free_riders.players.length > 0 && (
+        <div className="coc-card p-6 border-4">
+          <h3 className="text-xl font-bold text-red-400 mb-4">⚠️ Detected Free Riders</h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {data.free_riders.players.map((player, i) => (
+              <div key={i} className="bg-red-900/20 p-3 rounded-lg border border-red-900/50 flex items-center gap-3">
+                <span className="text-2xl">🦥</span>
+                <div>
+                  <div className="text-yellow-100 font-bold">{player.name || `Player ${i + 1}`}</div>
+                  <div className="text-xs text-red-400">Contribution: {player.contribution || 0}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
