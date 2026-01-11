@@ -640,20 +640,86 @@ const FairnessTab = ({ data }) => {
   }
 
   return (
-    <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
-      <h2 className="text-2xl font-bold text-white mb-4">Matchmaking Fairness Audit</h2>
-      <div className="grid md:grid-cols-2 gap-6">
-        <div>
-          <div className="text-sm text-blue-200">Fairness Grade</div>
-          <div className="text-6xl font-bold text-blue-400 mb-2">{data.overall_grade?.grade}</div>
-          <div className="text-blue-200">{data.overall_grade?.description}</div>
-        </div>
-        <div>
-          <div className="text-sm text-blue-200">Overall Win Rate</div>
-          <div className="text-3xl font-bold text-purple-400">
-            {((data.win_rates?.all_wars?.win_rate || 0) * 100).toFixed(1)}%
+    <div className="space-y-6">
+      {/* Fairness Scale Visualization */}
+      <div className="coc-card p-6 border-4">
+        <h2 className="text-2xl font-bold text-coc-gold mb-6 flex items-center gap-3">
+          <span className="coc-icon text-xl">⚖️</span>
+          Matchmaking Fairness Audit
+        </h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div>
+            <FairnessScaleViz 
+              grade={data.overall_grade?.grade || 'B'}
+              winRate={data.win_rates?.all_wars?.win_rate || 0.5}
+              warsAnalyzed={data.wars_analyzed || 0}
+            />
           </div>
-          <div className="text-sm text-blue-200 mt-2">From {data.wars_analyzed} wars</div>
+          <div className="space-y-4">
+            <div className="bg-black/30 p-4 rounded-lg border border-amber-900/50">
+              <h4 className="text-coc-gold font-bold mb-2">📐 Fairness Metrics</h4>
+              <p className="text-yellow-200 text-sm">
+                We analyze matchmaking using demographic parity and propensity scores. 
+                A balanced scale means fair matchups. Tilted = systematic advantage/disadvantage.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-black/30 p-3 rounded-lg text-center">
+                <div className="text-5xl font-bold text-blue-400">{data.overall_grade?.grade}</div>
+                <div className="text-xs text-yellow-200 uppercase">Fairness Grade</div>
+              </div>
+              <div className="bg-black/30 p-3 rounded-lg text-center">
+                <div className="text-3xl font-bold text-purple-400">
+                  {((data.win_rates?.all_wars?.win_rate || 0) * 100).toFixed(1)}%
+                </div>
+                <div className="text-xs text-yellow-200 uppercase">Overall Win Rate</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Detailed Stats */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="coc-card p-6 border-4">
+          <h3 className="text-xl font-bold text-coc-gold mb-4">📊 War Statistics</h3>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-yellow-200">Wars Analyzed</span>
+              <span className="text-white font-bold">{data.wars_analyzed || 0}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-yellow-200">Wins</span>
+              <span className="text-green-400 font-bold">{data.win_rates?.all_wars?.wins || 0}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-yellow-200">Losses</span>
+              <span className="text-red-400 font-bold">{data.win_rates?.all_wars?.losses || 0}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-yellow-200">Draws</span>
+              <span className="text-yellow-400 font-bold">{data.win_rates?.all_wars?.draws || 0}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="coc-card p-6 border-4">
+          <h3 className="text-xl font-bold text-coc-gold mb-4">🎯 Bias Analysis</h3>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-yellow-200">Strength Bias Score</span>
+              <span className="text-blue-400 font-bold">{(data.strength_bias?.bias_score || 0).toFixed(3)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-yellow-200">Bias Interpretation</span>
+              <span className="text-white font-bold capitalize">{data.strength_bias?.interpretation || 'N/A'}</span>
+            </div>
+            <div className="coc-divider my-4"></div>
+            <div className="text-center">
+              <div className="text-sm text-yellow-200 mb-2">Grade Description</div>
+              <div className="text-white">{data.overall_grade?.description || 'No assessment available'}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
