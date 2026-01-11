@@ -207,14 +207,16 @@ frontend:
 metadata:
   created_by: "testing_agent"
   version: "1.0"
-  test_sequence: 1
+  test_sequence: 2
   run_ui: false
 
 test_plan:
   current_focus:
-    - "Root API endpoint health check"
-    - "System IP endpoint health check"
-    - "Data clans listing endpoint health check"
+    - "Player search with real data"
+    - "Clan stats with collected data"
+    - "Leadership ML analysis with real data"
+    - "Donation ML analysis with real data"
+    - "Capital ML analysis with real data"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -222,3 +224,5 @@ test_plan:
 agent_communication:
   - agent: "testing"
     message: "Completed backend API health checks for CoC ML Research Platform. All 3 requested endpoints (GET /api/, GET /api/system/ip, GET /api/data/clans) are working correctly with 200 status codes and proper JSON responses. Backend is healthy after frontend migration."
+  - agent: "testing"
+    message: "Completed comprehensive testing of CoC ML Research Platform with REAL DATA for clan #9PC99CP8 (Amber Amry). All 5 requested endpoints tested successfully: Player search returns Anirban from Amber Amry, clan stats show substantial data collection (246 player snapshots, 10 capital raids), and all 3 ML analyses (leadership, donations, capital) are working correctly with meaningful results. Platform is fully operational with real CoC data."
