@@ -42,6 +42,9 @@ const Landing = () => {
           </button>
         </div>
 
+        {/* Player Search */}
+        <PlayerSearch />
+
         {/* ML Modules Grid */}
         <h2 className="text-3xl font-bold text-white mb-8 text-center">7 Research Modules</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
